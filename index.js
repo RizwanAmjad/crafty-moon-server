@@ -3,9 +3,11 @@ const mongoose = require("mongoose");
 
 const admin = require("./routes/admin");
 const auth = require("./routes/auth");
+const categories = require("./routes/categories");
 const users = require("./routes/users");
 
 const app = express();
+
 app.use(express.json());
 
 // connect to the mongo DB database
@@ -20,6 +22,7 @@ mongoose
 // register all the routes
 app.use("/api/admins", admin);
 app.use("/api/auth", auth);
+app.use("/api/categories", categories);
 app.use("/api/users", users);
 
 const PORT = process.env.PORT || 3000;
