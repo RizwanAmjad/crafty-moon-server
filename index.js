@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
+const admin = require("./routes/admin");
 const auth = require("./routes/auth");
 const users = require("./routes/users");
 
@@ -17,6 +18,7 @@ mongoose
   .catch(() => console.log("Error connecting to the DB"));
 
 // register all the routes
+app.use("/api/admins", admin);
 app.use("/api/auth", auth);
 app.use("/api/users", users);
 
