@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const admin = require("./routes/admin");
 const auth = require("./routes/auth");
 const categories = require("./routes/categories");
+const paintings = require("./routes/paintings");
 const users = require("./routes/users");
 
 const app = express();
@@ -23,6 +24,7 @@ mongoose
 app.use("/api/admins", admin);
 app.use("/api/auth", auth);
 app.use("/api/categories", categories);
+app.use("/api/paintings", paintings);
 app.use("/api/users", users);
 
 const PORT = process.env.PORT || 3000;
