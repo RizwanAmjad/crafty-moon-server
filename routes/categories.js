@@ -15,7 +15,7 @@ router.post("/", adminAuth, async (req, res) => {
     // save the category
     return res.send(await category.save());
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send("Category already Exists");
   }
 });
 
@@ -46,6 +46,16 @@ router.put("/:id", adminAuth, async (req, res) => {
   }
 });
 
-// TODO: implement a route to delete a particular category and all related paintings
+router.delete("/:id", adminAuth, async (req, res) => {
+  const { id } = req.params;
+
+  const category = await Category.findById(id);
+
+  if (!category) return res.status(404).send("Category not found");
+
+  const delCategory = await Category.findByIdAndRemove(id);
+
+  return res.send(delCategory);
+});
 
 module.exports = router;
