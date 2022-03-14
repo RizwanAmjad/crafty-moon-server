@@ -44,10 +44,6 @@ const validatePaintingJoi = (painting) => {
     title: Joi.string().required().label("Title"),
     caption: Joi.string().label("Caption"),
     category: Joi.string().required().label("Category"),
-    images: Joi.array()
-      .items(Joi.string().required())
-      .required()
-      .label("Images"),
     price: Joi.number().min(0).required().label("Price"),
   });
   const { error } = schema.validate(painting);

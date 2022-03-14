@@ -11,6 +11,8 @@ const app = express();
 
 app.use(express.json());
 
+global.__basedir = __dirname;
+
 // connect to the mongo DB database
 const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://localhost/crafty-moon";

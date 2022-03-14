@@ -1,4 +1,7 @@
 const express = require("express");
+const path = require("path");
+
+const upload = require("express-fileupload");
 
 const { Painting, validatePaintingJoi } = require("../models/paintings");
 const { Category } = require("../models/categories");
@@ -7,21 +10,40 @@ const adminAuth = require("../middleware/adminAuth");
 
 const router = express.Router();
 
-router.post("/", adminAuth, async (req, res) => {
+const { v4: uuidv4 } = require("uuid");
+
+router.post("/", adminAuth, upload(), async (req, res) => {
   // validate the request body
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send("No files uploaded");
+  }
+
+  const { images } = req.files;
+
   const error = validatePaintingJoi(req.body);
-  // if (error) return res.status(400).send(error);
+  if (error) return res.status(400).send(error);
 
   // check to see if category is valid and existing
   const isCategoryValid = await Category.findById(req.body.category);
 
   if (!isCategoryValid) return res.status(400).send("Invalid Category");
 
+  const imageNames = images.map(async (image) => {
+    const extension = path.extname(image.name);
+    const name = `${uuidv4()}${extension}`;
+    try {
+      await image.mv(`${__basedir}/static/uploads/${name}`);
+    } catch (e) {
+      return res.status(500);
+    }
+    return name;
+  });
+
+  req.body.images = await Promise.all(imageNames);
+
   let painting = new Painting(req.body);
   try {
     painting = await painting.save();
-    // TODO: upload the image here
-
     return res.send(painting);
   } catch (ex) {
     return res.status(500).send(ex);
